@@ -1,5 +1,6 @@
 const morgan = require("morgan");
 const express = require("express");
+const methodOverride = require("method-override");
 const { engine } = require("express-handlebars");
 const path = require("path");
 const app = express();
@@ -19,11 +20,17 @@ app.use(express.urlencoded({ extended: true }));
 // HTTP Logger
 app.use(morgan("combined"));
 
+//custom method 
+app.use(methodOverride("_method"));
+
 // Templates engine
 app.engine(
   "hbs",
   engine({
     extname: ".hbs",
+    helpers: {
+      sum: (a, b) => a + b,
+    },
   })
 );
 app.set("view engine", "hbs");
