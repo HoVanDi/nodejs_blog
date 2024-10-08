@@ -54,9 +54,9 @@ class CourseController {
 
   //[DELETE] /courses/:id/force
   forceDestroy(req, res, next) {
-        Course.deleteOne({ _id: req.params.id })
-          .then(() => res.redirect("back"))
-          .catch(next);
+    Course.deleteOne({ _id: req.params.id })
+      .then(() => res.redirect("back"))
+      .catch(next);
   }
 
   //[PATCH] /courses/:id/restore
@@ -64,6 +64,20 @@ class CourseController {
     Course.restore({ _id: req.params.id })
       .then(() => res.redirect("back"))
       .catch(next);
+  }
+
+  //[POST] /courses/handleFormActions
+  handleFormActions(req, res, next) {
+    console.log(req.body.courseIds);
+    switch (req.body.action) {
+      case "delete":
+        Course.delete({ _id: { $in: req.body.courseIds } })
+          .then(() => res.redirect("back"))
+          .catch(next);
+        break;
+      default:
+          res.json({message: "Invalid action"})
+    }
   }
 }
 
